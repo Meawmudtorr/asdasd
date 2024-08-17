@@ -1,0 +1,55 @@
+from flask import Flask, request, abort
+from linebot import LineBotApi, WebhookHandler
+from linebot.models import MessageEvent, TextMessage, ImageMessage
+import numpy as np
+from PIL import Image
+import joblib
+import io
+
+app = Flask(__name__)
+
+# LINE API
+line_bot_api = LineBotApi('XYwfM8fustXQYD2xnnsIk9FlQjavaaf0QkqeDZtu4DvtXAMHUaE1h2fZUF7hwMo4jST7BSUWWFWa90rGnIkGUMvZQUxwGfUu4dCIBuyAA0kQCFbpWqA/xVa0pxHiPiWBVVUZVCmTFWoDEg7+R9JLjgdB04t89/1O/w1cDnyilFU=')
+handler = WebhookHandler('cb2f94676b5546bd74374cee759ac5fb')
+
+# โหลดโมเดล
+model = joblib.load('cr6_model.pkl')
+
+def extract_rgb(image_path):
+    image = Image.open(image_path)
+    rgb_mean = np.array(image).mean(axis=(0, 1))
+    return rgb_mean
+
+def predict_concentration(image_path):
+    rgb = extract_rgb(image_path)
+    prediction = model.predict([rgb])[0]
+    return prediction
+
+@app.route("/callback", methods=['POST'])
+def callback():
+    signature = request.headers['X-Line-Signature']
+    body = request.get_data(as_text=True)
+    try:
+        handler.handle(body, signature)
+    except Exception as e:
+        print(f"Error: {e}")
+        abort(400)
+    return 'OK'
+
+@handler.add(MessageEvent, message=ImageMessage)
+def handle_image_message(event):
+    message_id = event.message.id
+    message_content = line_bot_api.get_message_content(message_id)
+    image_content = io.BytesIO(message_content.content)
+    temp_image_path = 'temp_image.png'
+    with open(temp_image_path, 'wb') as f:
+        f.write(image_content.read())
+    concentration = predict_concentration(temp_image_path)
+    response_message = f'Predicted Cr6+ concentration: {concentration} mg/L'
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextMessage(text=response_message)
+    )
+
+if __name__ == "__main__":
+    app.run(debug=True)

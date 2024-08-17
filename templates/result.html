@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #007bff;
+        }
+        .uploaded-image {
+            margin-top: 20px;
+        }
+        .uploaded-image img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 5px;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Result</h1>
+        <div class="result">Predicted Cr6+ concentration: {{ concentration }} mg/L</div>
+        <div class="uploaded-image">
+            <h2>Uploaded Image:</h2>
+            <img src="{{ image_url }}" alt="Uploaded Image">
+        </div>
+        <a href="/" class="back-btn">Upload Another Image</a>
+    </div>
+</body>
+</html>

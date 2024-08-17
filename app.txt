@@ -1,0 +1,2 @@
+line_bot_api = LineBotApi('XYwfM8fustXQYD2xnnsIk9FlQjavaaf0QkqeDZtu4DvtXAMHUaE1h2fZUF7hwMo4jST7BSUWWFWa90rGnIkGUMvZQUxwGfUu4dCIBuyAA0kQCFbpWqA/xVa0pxHiPiWBVVUZVCmTFWoDEg7+R9JLjgdB04t89/1O/w1cDnyilFU=')
+handler = WebhookHandler('cb2f94676b5546bd74374cee759ac5fb')
